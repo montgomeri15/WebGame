@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="org.eclipse.jetty.aggregate:jetty-servlet:7.6.0.RC1" type="repository">
+    <properties maven-id="org.eclipse.jetty.aggregate:jetty-servlet:7.6.0.RC1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/aggregate/jetty-servlet/7.6.0.RC1/jetty-servlet-7.6.0.RC1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
