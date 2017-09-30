@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import servlets.LoginServlet;
+import servlets.RegistrationServlet;
 
 public class Main {
 
@@ -13,7 +14,7 @@ public class Main {
         cfg.setClassForTemplateLoading(LoginServlet.class, "/");
 
         try {
-            cfg.setDirectoryForTemplateLoading(new File("C:\\Users\\Admin\\Desktop\\WebServer\\src\\main\\java\\main"));
+            cfg.setDirectoryForTemplateLoading(new File("C:/Users/Admin/Desktop/WebServer/src/main/java/main"));
             Template helloTemplate = cfg.getTemplate("hello.html");
             StringWriter writer = new StringWriter();
             Map<String, Object> helloMap = new HashMap();
@@ -28,11 +29,14 @@ public class Main {
         }*/
 
         LoginServlet loginServlet = new LoginServlet();
+        RegistrationServlet registrationServlet = new RegistrationServlet();
 
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
+
         context.addServlet(new ServletHolder(loginServlet), "/");
+        context.addServlet(new ServletHolder(registrationServlet), "/reg");
 
         server.start();
         server.join();

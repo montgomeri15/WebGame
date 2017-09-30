@@ -10,25 +10,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginServlet extends HttpServlet {
+public class RegistrationServlet extends HttpServlet {
 
     DbManager db = new DbManager();
-    String login, password;
+    String login, password, passwordRepeat;
 
     public static Connection connection;
+    public static PreparedStatement prepSt;
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
         Map<String, Object> pageVariables = new HashMap<>();
-        pageVariables.put("name", "");
+        pageVariables.put("username", "");
 
-        response.getWriter().println(PageGenerator.instance().getPage("login.html", pageVariables));
+        response.getWriter().println(PageGenerator.instance().getPage("registration.html", pageVariables));
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -38,19 +40,20 @@ public class LoginServlet extends HttpServlet {
                        HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
 
-        String name = request.getParameter("name");
+        String username = request.getParameter("username");
         response.setContentType("text/html;charset=utf-8");
 
-        if (name.equals(null) || name.isEmpty()) {
+        if (username.equals(null) || username.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
         }
-        pageVariables.put("name", name.equals(null) ? "" : name);
+        pageVariables.put("name", username.equals(null) ? "" : username);
 
         /***Считываем введенные данные***/
-        login = request.getParameter("name");
+        login = request.getParameter("username");
         password = request.getParameter("password");
+        passwordRepeat = request.getParameter("passwordRepeat");
 
         /***Подключение к БД***/
         try {
@@ -61,28 +64,19 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        /***Считывание таблицы***/
-        List<Constructor> list = null;
-        try {
-            list = db.readTable();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        boolean a = false;  //Переменная для проверки
-
-        for (int i = 0; i<list.size(); i++){
-            String dbNames = list.get(i).getName().toString();
-            String dbPasswords = list.get(i).getPass().toString();
-
-            if (login.equals(dbNames) && password.equals(dbPasswords)){
-                a = true;
+        /***Заполнение таблицы***/
+        if (password.equals(passwordRepeat)) {
+            try {
+                prepSt = connection.prepareStatement("INSERT INTO `table` (Name, Pass) VALUES (?, ?)");
+                prepSt.setString(1, login);
+                prepSt.setString(2, password);
+                prepSt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        }
-        if (a==true){
-            response.getWriter().println(PageGenerator.instance().getPage("postlogin.html", pageVariables));
-        }else {
-            response.getWriter().println(PageGenerator.instance().getPage("notlogin.html", pageVariables));
+            response.getWriter().println(PageGenerator.instance().getPage("postregistration.html", pageVariables));
+        } else {
+            response.getWriter().println(PageGenerator.instance().getPage("notregistration.html", pageVariables));
         }
     }
 }
