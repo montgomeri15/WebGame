@@ -55,7 +55,6 @@ public class RegistrationServlet extends HttpServlet {
         password = request.getParameter("password");
         passwordRepeat = request.getParameter("passwordRepeat");
 
-        /***Подключение к БД***/
         try {
             connection = db.getConnection();
         } catch (ClassNotFoundException e) {
@@ -64,7 +63,6 @@ public class RegistrationServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        /***Заполнение таблицы***/
         if (password.equals(passwordRepeat)) {
             try {
                 prepSt = connection.prepareStatement("INSERT INTO `table` (Name, Pass) VALUES (?, ?)");

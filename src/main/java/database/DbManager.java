@@ -17,7 +17,6 @@ public class DbManager {
 
         Class.forName("com.mysql.jdbc.Driver");
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/location", "root", "root");
-        System.out.println("База Подключена!");
         return connection;
     }
 
@@ -40,8 +39,6 @@ public class DbManager {
             Constructor constructor =  new Constructor();
             constructor.setName(name);
             constructor.setPass(password);
-
-            System.out.println(constructor.getName()+" "+constructor.getPass());
 
             usersCollection.add(constructor);
         }
