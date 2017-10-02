@@ -13,18 +13,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -43,12 +36,12 @@ public class Launcher extends Application {
     Button buttonRegistration = new Button("Sign Up");
     Label labelErrorMessage = new Label("");
 
+    String stringHead = "Голова";
+    String stringBody = "Корпус";
+    String stringLegs = "Ноги";
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        //Запуск Tomcat
-//        Process p =  Runtime.getRuntime().exec("cmd /c C:\\Users\\Admin\\Desktop\\MyJavaSite\\apache-tomcat-9.0.0.M26\\bin\\startup.bat", null, new File("C:\\Users\\Admin\\Desktop\\MyJavaSite\\apache-tomcat-9.0.0.M26"));
-        //      p.isAlive();
 
         GridPane paneFields = new GridPane();
         paneFields.setAlignment(Pos.CENTER);
@@ -57,7 +50,6 @@ public class Launcher extends Application {
         paneFields.setHgap(10);
         paneFields.setVgap(10);
         paneFields.setPadding(new Insets(20, 20, 20, 20));
-
         paneFields.add(labelUser, 0, 0);
         paneFields.add(textUser, 1, 0);
         paneFields.add(labelPass, 0, 1);
@@ -75,7 +67,6 @@ public class Launcher extends Application {
 
         GridPane paneAll = new GridPane();
         paneAll.setAlignment(Pos.CENTER);
-
         paneAll.add(paneFields, 0, 0);
         paneAll.add(paneButton, 0, 1);
         paneAll.add(paneErrorMessage, 0, 2);
@@ -86,25 +77,20 @@ public class Launcher extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        /***Подключение к БД***/
         connection = db.getConnection();
 
         buttonStart.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {
-
                 String login = textUser.getText();
                 String password = textPass.getText();
 
-                /***Считывание таблицы***/
                 List<Constructor> list = null;
                 try {
                     list = db.readTable();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
                 for (int i = 0; i<list.size(); i++){
-
                     String dbNames = list.get(i).getName().toString();
                     String dbPasswords = list.get(i).getPass().toString();
 
@@ -119,134 +105,156 @@ public class Launcher extends Application {
                 }
             }
         });
-        buttonRegistration.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    Desktop.getDesktop().browse(new URI("http://localhost:8080/reg"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     public void fightFrame() {
 
         Stage primaryStageFight = new Stage();
 
+        String stringAttack = "Атака";
+        String stringShield = "Защита";
+        String stringSpace = "                                    ";
+
+        Label labelAttackPl1 = new Label(stringAttack);
+        Label labelShieldPl1 = new Label(stringShield);
+        Label labelAttackPl2 = new Label(stringAttack);
+        Label labelShieldPl2 = new Label(stringShield);
+        Label labelSpaceAttackPl1 = new Label(stringSpace);
+        Label labelSpaceAttackPl2 = new Label(stringSpace);
+        Label labelSpaceShieldPl1 = new Label(stringSpace);
+        Label labelSpaceShieldPl2 = new Label(stringSpace);
+        Label labelSpaceBetweenVert = new Label(stringSpace);
+        Label labelSpaceBetweenHoriz = new Label(stringSpace);
+
+        ToggleGroup radioGroupAttackPl1 = new ToggleGroup();
+        RadioButton radioHeadAttackPl1 = new RadioButton(stringHead);
+        RadioButton radioBodyAttackPl1 = new RadioButton(stringBody);
+        RadioButton radioLegsAttackPl1 = new RadioButton(stringLegs);
+        radioHeadAttackPl1.setToggleGroup(radioGroupAttackPl1);
+        radioBodyAttackPl1.setToggleGroup(radioGroupAttackPl1);
+        radioLegsAttackPl1.setToggleGroup(radioGroupAttackPl1);
+
+        ToggleGroup radioGroupAttackPl2 = new ToggleGroup();
+        RadioButton radioHeadAttackPl2 = new RadioButton(stringHead);
+        RadioButton radioBodyAttackPl2 = new RadioButton(stringBody);
+        RadioButton radioLegsAttackPl2 = new RadioButton(stringLegs);
+        radioHeadAttackPl2.setToggleGroup(radioGroupAttackPl2);
+        radioBodyAttackPl2.setToggleGroup(radioGroupAttackPl2);
+        radioLegsAttackPl2.setToggleGroup(radioGroupAttackPl2);
+
+        ToggleGroup radioGroupShieldPl1 = new ToggleGroup();
+        RadioButton radioHeadShieldPl1 = new RadioButton(stringHead);
+        RadioButton radioBodyShieldPl1 = new RadioButton(stringBody);
+        RadioButton radioLegsShieldPl1 = new RadioButton(stringLegs);
+        radioHeadShieldPl1.setToggleGroup(radioGroupShieldPl1);
+        radioBodyShieldPl1.setToggleGroup(radioGroupShieldPl1);
+        radioLegsShieldPl1.setToggleGroup(radioGroupShieldPl1);
+
+        ToggleGroup radioGroupShieldPl2 = new ToggleGroup();
+        RadioButton radioHeadShieldPl2 = new RadioButton(stringHead);
+        RadioButton radioBodyShieldPl2 = new RadioButton(stringBody);
+        RadioButton radioLegsShieldPl2 = new RadioButton(stringLegs);
+        radioHeadShieldPl2.setToggleGroup(radioGroupShieldPl2);
+        radioBodyShieldPl2.setToggleGroup(radioGroupShieldPl2);
+        radioLegsShieldPl2.setToggleGroup(radioGroupShieldPl2);
+
+        GridPane paneRadioAttackPl1 = new GridPane();
+        paneRadioAttackPl1.setStyle("-fx-border-color: gray;");
+        paneRadioAttackPl1.setPrefWidth(150);
+        paneRadioAttackPl1.setPrefHeight(110);
+        paneRadioAttackPl1.setAlignment(Pos.CENTER);
+        paneRadioAttackPl1.add(labelAttackPl1, 0, 0);
+        paneRadioAttackPl1.add(labelSpaceAttackPl1, 0, 1);
+        paneRadioAttackPl1.add(radioHeadAttackPl1, 0, 2);
+        paneRadioAttackPl1.add(radioBodyAttackPl1, 0, 3);
+        paneRadioAttackPl1.add(radioLegsAttackPl1, 0, 4);
+
+        GridPane paneRadioAttackPl2 = new GridPane();
+        paneRadioAttackPl2.setStyle("-fx-border-color: gray;");
+        paneRadioAttackPl2.setPrefWidth(150);
+        paneRadioAttackPl2.setPrefHeight(110);
+        paneRadioAttackPl2.setAlignment(Pos.CENTER);
+        paneRadioAttackPl2.add(labelAttackPl2, 0, 0);
+        paneRadioAttackPl2.add(labelSpaceAttackPl2, 0, 1);
+        paneRadioAttackPl2.add(radioHeadAttackPl2, 0, 2);
+        paneRadioAttackPl2.add(radioBodyAttackPl2, 0, 3);
+        paneRadioAttackPl2.add(radioLegsAttackPl2, 0, 4);
+
+        GridPane paneRadioShieldPl1 = new GridPane();
+        paneRadioShieldPl1.setStyle("-fx-border-color: gray;");
+        paneRadioShieldPl1.setPrefWidth(150);
+        paneRadioShieldPl1.setPrefHeight(110);
+        paneRadioShieldPl1.setAlignment(Pos.CENTER);
+        paneRadioShieldPl1.add(labelShieldPl1, 0, 0);
+        paneRadioShieldPl1.add(labelSpaceShieldPl1, 0, 1);
+        paneRadioShieldPl1.add(radioHeadShieldPl1, 0, 2);
+        paneRadioShieldPl1.add(radioBodyShieldPl1, 0, 3);
+        paneRadioShieldPl1.add(radioLegsShieldPl1, 0, 4);
+
+        GridPane paneRadioShieldPl2 = new GridPane();
+        paneRadioShieldPl2.setStyle("-fx-border-color: gray;");
+        paneRadioShieldPl2.setPrefWidth(150);
+        paneRadioShieldPl2.setPrefHeight(110);
+        paneRadioShieldPl2.setAlignment(Pos.CENTER);
+        paneRadioShieldPl2.add(labelShieldPl2, 0, 0);
+        paneRadioShieldPl2.add(labelSpaceShieldPl2, 0, 1);
+        paneRadioShieldPl2.add(radioHeadShieldPl2, 0, 2);
+        paneRadioShieldPl2.add(radioBodyShieldPl2, 0, 3);
+        paneRadioShieldPl2.add(radioLegsShieldPl2, 0, 4);
+
+        GridPane paneAllRadioPanes = new GridPane();
+        paneRadioShieldPl2.setAlignment(Pos.CENTER);
+        paneAllRadioPanes.add(paneRadioAttackPl1, 0, 0);
+        paneAllRadioPanes.add(labelSpaceBetweenHoriz, 1, 0);
+        paneAllRadioPanes.add(paneRadioAttackPl2, 2, 0);
+        paneAllRadioPanes.add(labelSpaceBetweenVert, 0, 1);
+        paneAllRadioPanes.add(paneRadioShieldPl1, 0, 2);
+        paneAllRadioPanes.add(paneRadioShieldPl2, 2, 2);
+
+        ImageView imgHPPl1 = new ImageView(new File("src/main/java/images/LoriHP.png").toURI().toString());
+        ImageView imgHPPl2 = new ImageView(new File("src/main/java/images/MaiHP.png").toURI().toString());
+        ImageView imgPl1 = new ImageView(new File("src/main/java/images/Lori.gif").toURI().toString());
+        ImageView imgPl2 = new ImageView(new File("src/main/java/images/Mai.gif").toURI().toString());
+
+        GridPane paneHPPl1 = new GridPane();
+        paneHPPl1.setAlignment(Pos.CENTER);
+        paneHPPl1.add(imgHPPl1, 0, 0);
+        GridPane paneHPPl2 = new GridPane();
+        paneHPPl2.setAlignment(Pos.CENTER);
+        paneHPPl2.add(imgHPPl2, 0, 0);
+
+        GridPane paneFightPl1 = new GridPane();
+        paneFightPl1.setAlignment(Pos.CENTER);
+        paneFightPl1.add(imgPl1, 0, 0);
+        GridPane paneFightPl2 = new GridPane();
+        paneFightPl2.setAlignment(Pos.CENTER);
+        paneFightPl2.add(imgPl2, 0, 0);
+
+        Button buttonGo = new Button("Go!");
+
+        GridPane paneGo = new GridPane();
+        paneGo.setAlignment(Pos.CENTER);
+        paneGo.add(buttonGo, 0, 0);
+
+        GridPane paneAll = new GridPane();
+        paneAll.setAlignment(Pos.CENTER);
+        paneAll.add(paneHPPl1, 0, 0);
+        paneAll.add(paneHPPl2, 2, 0);
+        paneAll.add(paneFightPl1, 0, 1);
+        paneAll.add(paneAllRadioPanes, 1, 1);
+        paneAll.add(paneFightPl2, 2, 1);
+        paneAll.add(paneGo, 1, 2);
+
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();  //Определяем разрешение экрана
         int screenWidth = (int) primaryScreenBounds.getWidth();  //Присваиваем ширину
         int screenHeight = (int) primaryScreenBounds.getHeight();  //Присваиваем высоту
-
-        Button buttonHit = new Button("Hit");
-        Button buttonBlock = new Button("Block");
-        Button buttonNext = new Button("Next");
-
-        ImageView imgDuoLonAvatar = new ImageView(new File("src/main/java/images/DuoLonHP.jpg").toURI().toString());
-        ImageView imgSaikiAvatar = new ImageView(new File("src/main/java/images/SaikiHP.jpg").toURI().toString());
-        ImageView imgDuoLon = new ImageView(new File("src/main/java/images/DuoLon.gif").toURI().toString());
-        //ImageView imgSpace = new ImageView(new File("src/main/java/images/spaceCharacters.png").toURI().toString());
-        ImageView imgSaiki = new ImageView(new File("src/main/java/images/Saiki.gif").toURI().toString());
-
-        /*ImageView imgDuoLonAvatar = new ImageView(getClass().getResource("/images/DuoLonHP.jpg").toExternalForm());
-        ImageView imgSaikiAvatar = new ImageView(getClass().getResource("/images/SaikiHP.jpg").toExternalForm());
-        ImageView imgDuoLon = new ImageView(getClass().getResource("/images/DuoLon.gif").toExternalForm());
-        ImageView imgSpace = new ImageView(getClass().getResource("/images/spaceCharacters.png").toExternalForm());
-        ImageView imgSaiki = new ImageView(getClass().getResource("/images/Saiki.gif").toExternalForm());*/
-
-        GridPane paneAvatars = new GridPane();
-        paneAvatars.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), CornerRadii.EMPTY, Insets.EMPTY)));
-        paneAvatars.setAlignment(Pos.CENTER);
-
-        paneAvatars.add(imgDuoLonAvatar, 0, 0);
-        paneAvatars.add(imgSaikiAvatar, 1, 0);
-
-        GridPane paneFight = new GridPane();
-        paneFight.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), CornerRadii.EMPTY, Insets.EMPTY)));
-        paneFight.setAlignment(Pos.CENTER);
-        paneFight.setHgap(10);
-        paneFight.setVgap(10);
-        paneFight.setPadding(new Insets(20, 20, 20, 20));
-
-        paneFight.add(imgDuoLon, 0, 0);
-        //paneFight.add(imgSpace, 1, 0);
-        paneFight.add(imgSaiki, 2, 0);
-
-        GridPane paneFightButtons = new GridPane();
-        paneFightButtons.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), CornerRadii.EMPTY, Insets.EMPTY)));
-        paneFightButtons.setAlignment(Pos.CENTER);
-
-        paneFightButtons.add(buttonHit, 0, 0);
-        paneFightButtons.add(buttonBlock, 0, 1);
-        paneFightButtons.add(buttonNext, 0, 2);
-
-        GridPane paneAll = new GridPane();
-        paneAll.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), CornerRadii.EMPTY, Insets.EMPTY)));
-        paneAll.setAlignment(Pos.CENTER);
-
-        paneAll.add(paneAvatars, 0, 0);
-        paneAll.add(paneFight, 0, 1);
-        paneAll.add(paneFightButtons, 0, 2);
-
         primaryStageFight.setWidth(screenWidth);  //Задаем ширину
         primaryStageFight.setHeight(screenHeight);  //Задаем высоту
 
-        Scene scene = new Scene(paneAll, screenWidth, screenHeight, Color.WHITE);
+        Scene scene = new Scene(paneAll, screenWidth, screenHeight);
 
         primaryStageFight.setTitle("Game");
         primaryStageFight.setScene(scene);
         primaryStageFight.show();
-
-        buttonHit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                fightAction();
-            }
-        });
-        buttonBlock.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                fightAction();
-            }
-        });
-        buttonNext.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                System.out.print("Next Player");
-            }
-        });
-    }
-
-    public void fightAction() {
-
-        Stage primaryStageFightAction = new Stage();
-
-        ToggleGroup toggleGroup = new ToggleGroup();
-        RadioButton radioHead = new RadioButton("Head");
-        RadioButton radioBody = new RadioButton("Body");
-        RadioButton radioLegs = new RadioButton("Legs");
-
-        radioHead.setToggleGroup(toggleGroup);
-        radioBody.setToggleGroup(toggleGroup);
-        radioLegs.setToggleGroup(toggleGroup);
-
-        GridPane paneRadio = new GridPane();
-        paneRadio.setAlignment(Pos.CENTER);
-        paneRadio.setHgap(10);
-        paneRadio.setVgap(10);
-        paneRadio.setPadding(new Insets(20, 20, 20, 20));
-
-        paneRadio.add(radioHead, 0, 0);
-        paneRadio.add(radioBody, 0, 1);
-        paneRadio.add(radioLegs, 0, 2);
-
-        Scene scene = new Scene(paneRadio, 300, 300, Color.WHITE);
-
-        primaryStageFightAction.setTitle("Choice");
-        primaryStageFightAction.setScene(scene);
-        primaryStageFightAction.show();
     }
 }
