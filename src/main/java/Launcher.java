@@ -21,6 +21,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Scanner;
 
 public class Launcher extends Application {
 
@@ -35,6 +36,19 @@ public class Launcher extends Application {
     Button buttonStart = new Button("Start");
     Button buttonRegistration = new Button("Sign Up");
     Label labelErrorMessage = new Label("");
+
+    ImageView imgHPPl1 = new ImageView(new File("src/main/java/images/HP/DuoLonHP.png").toURI().toString());
+    ImageView imgHPPl2 = new ImageView(new File("src/main/java/images/HP/SaikiHP.png").toURI().toString());
+    ImageView imgPl1 = new ImageView(new File("src/main/java/images/DuoLon.gif").toURI().toString());
+    ImageView imgPl2 = new ImageView(new File("src/main/java/images/Saiki.gif").toURI().toString());
+    ImageView imgSpace = new ImageView(new File("src/main/java/images/space.png").toURI().toString());
+
+    GridPane paneHPPl1;
+    GridPane paneHPPl2;
+    GridPane paneFightPl1;
+    GridPane paneFightPl2;
+
+    int check = 0;  //Счетчик для картинок
 
     String stringHead = "Голова";
     String stringBody = "Корпус";
@@ -211,22 +225,17 @@ public class Launcher extends Application {
         paneAllRadioPanes.add(paneRadioShieldPl1, 0, 2);
         paneAllRadioPanes.add(paneRadioShieldPl2, 2, 2);
 
-        ImageView imgHPPl1 = new ImageView(new File("src/main/java/images/LoriHP.png").toURI().toString());
-        ImageView imgHPPl2 = new ImageView(new File("src/main/java/images/MaiHP.png").toURI().toString());
-        ImageView imgPl1 = new ImageView(new File("src/main/java/images/Lori.gif").toURI().toString());
-        ImageView imgPl2 = new ImageView(new File("src/main/java/images/Mai.gif").toURI().toString());
-
-        GridPane paneHPPl1 = new GridPane();
+        paneHPPl1 = new GridPane();
         paneHPPl1.setAlignment(Pos.CENTER);
         paneHPPl1.add(imgHPPl1, 0, 0);
-        GridPane paneHPPl2 = new GridPane();
+        paneHPPl2 = new GridPane();
         paneHPPl2.setAlignment(Pos.CENTER);
         paneHPPl2.add(imgHPPl2, 0, 0);
 
-        GridPane paneFightPl1 = new GridPane();
+        paneFightPl1 = new GridPane();
         paneFightPl1.setAlignment(Pos.CENTER);
         paneFightPl1.add(imgPl1, 0, 0);
-        GridPane paneFightPl2 = new GridPane();
+        paneFightPl2 = new GridPane();
         paneFightPl2.setAlignment(Pos.CENTER);
         paneFightPl2.add(imgPl2, 0, 0);
 
@@ -240,10 +249,15 @@ public class Launcher extends Application {
         paneAll.setAlignment(Pos.CENTER);
         paneAll.add(paneHPPl1, 0, 0);
         paneAll.add(paneHPPl2, 2, 0);
-        paneAll.add(paneFightPl1, 0, 1);
-        paneAll.add(paneAllRadioPanes, 1, 1);
-        paneAll.add(paneFightPl2, 2, 1);
-        paneAll.add(paneGo, 1, 2);
+        paneAll.add(imgSpace, 0, 1);
+        paneAll.add(paneFightPl1, 0, 2);
+        paneAll.add(paneAllRadioPanes, 1, 2);
+        paneAll.add(paneFightPl2, 2, 2);
+        paneAll.add(paneGo, 1, 3);
+
+        BackgroundImage myBI= new BackgroundImage(new Image(new File("src/main/java/images/background.jpg").toURI().toString()),  //Фон
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        paneAll.setBackground(new Background(myBI));
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();  //Определяем разрешение экрана
         int screenWidth = (int) primaryScreenBounds.getWidth();  //Присваиваем ширину
@@ -256,5 +270,28 @@ public class Launcher extends Application {
         primaryStageFight.setTitle("Game");
         primaryStageFight.setScene(scene);
         primaryStageFight.show();
+
+        buttonGo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                if (check==0) {
+                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPYellowPl1.png").toURI().toString());
+                    paneHPPl1.add(imgHPPl1, 0, 0);
+                    imgHPPl2 = new ImageView(new File("src/main/java/images/HP/imgHPYellowPl2.png").toURI().toString());
+                    paneHPPl2.add(imgHPPl2, 0, 0);
+                } else if (check ==1){
+                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPRedPl1.png").toURI().toString());
+                    paneHPPl1.add(imgHPPl1, 0, 0);
+                    imgHPPl2 = new ImageView(new File("src/main/java/images/HP/imgHPRedPl2.png").toURI().toString());
+                    paneHPPl2.add(imgHPPl2, 0, 0);
+                } else {
+                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPGreenPl1.png").toURI().toString());
+                    paneHPPl1.add(imgHPPl1, 0, 0);
+                    imgHPPl2 = new ImageView(new File("src/main/java/images/HP/imgHPGreenPl2.png").toURI().toString());
+                    paneHPPl2.add(imgHPPl2, 0, 0);
+                    check = -1;
+                }
+                check++;
+            }
+        });
     }
 }
