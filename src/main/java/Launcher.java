@@ -21,12 +21,10 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Scanner;
 
 public class Launcher extends Application {
-
-    DbManager db = new DbManager();
-    public static Connection connection;
+    //DbManager db = new DbManager();
+    //public static Connection connection;
 
     Label labelUser = new Label("Имя:");
     Label labelPass = new Label("Пароль:");
@@ -42,21 +40,22 @@ public class Launcher extends Application {
     ImageView imgPl1 = new ImageView(new File("src/main/java/images/DuoLon.gif").toURI().toString());
     ImageView imgPl2 = new ImageView(new File("src/main/java/images/Saiki.gif").toURI().toString());
     ImageView imgSpace = new ImageView(new File("src/main/java/images/space.png").toURI().toString());
+    ImageView imgGameOver = new ImageView(new File("src/main/java/images/spaceGameOver.png").toURI().toString());
 
     GridPane paneHPPl1;
     GridPane paneHPPl2;
     GridPane paneFightPl1;
     GridPane paneFightPl2;
-
-    int check = 0;  //Счетчик для картинок
+    GridPane paneAll;
 
     String stringHead = "Голова";
     String stringBody = "Корпус";
     String stringLegs = "Ноги";
 
+    double hp, damage, percentDamage, percentHp = 100;  //Для определения % снятия ХП
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         GridPane paneFields = new GridPane();
         paneFields.setAlignment(Pos.CENTER);
         primaryStage.setResizable(false);
@@ -91,14 +90,14 @@ public class Launcher extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        connection = db.getConnection();
+        //connection = db.getConnection();
 
         buttonStart.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {
                 String login = textUser.getText();
                 String password = textPass.getText();
 
-                List<Constructor> list = null;
+                /*List<Constructor> list = null;
                 try {
                     list = db.readTable();
                 } catch (SQLException e) {
@@ -106,28 +105,28 @@ public class Launcher extends Application {
                 }
                 for (int i = 0; i<list.size(); i++){
                     String dbNames = list.get(i).getName().toString();
-                    String dbPasswords = list.get(i).getPass().toString();
+                    String dbPasswords = list.get(i).getPass().toString();*/
 
-                    if (login.equals(dbNames) && password.equals(dbPasswords)){
-                        primaryStage.close();
-                        fightFrame();
-                    } else{
-                        textPass.setText(null);
-                        labelErrorMessage.setTextFill(Color.web("#DC143C"));
-                        labelErrorMessage.setText("Неверный логин или пароль");
-                    }
+                if (login.equals("1") && password.equals("1")){
+                    primaryStage.close();
+                    fightFrame();
+                } else{
+                    textPass.setText(null);
+                    labelErrorMessage.setTextFill(Color.web("#DC143C"));
+                    labelErrorMessage.setText("Неверный логин или пароль");
                 }
             }
+            // }
         });
     }
 
     public void fightFrame() {
-
         Stage primaryStageFight = new Stage();
 
         String stringAttack = "Атака";
         String stringShield = "Защита";
-        String stringSpace = "                                    ";
+        String stringSpace = " ";
+        String stringSpaceHoriz = "                                  ";
 
         Label labelAttackPl1 = new Label(stringAttack);
         Label labelShieldPl1 = new Label(stringShield);
@@ -138,7 +137,7 @@ public class Launcher extends Application {
         Label labelSpaceShieldPl1 = new Label(stringSpace);
         Label labelSpaceShieldPl2 = new Label(stringSpace);
         Label labelSpaceBetweenVert = new Label(stringSpace);
-        Label labelSpaceBetweenHoriz = new Label(stringSpace);
+        Label labelSpaceBetweenHoriz = new Label(stringSpaceHoriz);
 
         ToggleGroup radioGroupAttackPl1 = new ToggleGroup();
         RadioButton radioHeadAttackPl1 = new RadioButton(stringHead);
@@ -245,11 +244,11 @@ public class Launcher extends Application {
         paneGo.setAlignment(Pos.CENTER);
         paneGo.add(buttonGo, 0, 0);
 
-        GridPane paneAll = new GridPane();
+        paneAll = new GridPane();
         paneAll.setAlignment(Pos.CENTER);
         paneAll.add(paneHPPl1, 0, 0);
         paneAll.add(paneHPPl2, 2, 0);
-        paneAll.add(imgSpace, 0, 1);
+        paneAll.add(imgSpace, 1, 1);
         paneAll.add(paneFightPl1, 0, 2);
         paneAll.add(paneAllRadioPanes, 1, 2);
         paneAll.add(paneFightPl2, 2, 2);
@@ -273,25 +272,45 @@ public class Launcher extends Application {
 
         buttonGo.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                if (check==0) {
+                percent();
+
+                if (percentHp<=83.3 && percentHp>66.6) {
+                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPLimePl1.png").toURI().toString());
+                    paneHPPl1.add(imgHPPl1, 0, 0);
+                } else if (percentHp<=66.6 && percentHp>49.9){
+                    imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPYellowPl1.png").toURI().toString());
                     paneHPPl1.add(imgHPPl1, 0, 0);
-                    imgHPPl2 = new ImageView(new File("src/main/java/images/HP/imgHPYellowPl2.png").toURI().toString());
-                    paneHPPl2.add(imgHPPl2, 0, 0);
-                } else if (check ==1){
+                } else if (percentHp<=49.9 && percentHp>33.2){
+                    imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
+                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPOrangePl1.png").toURI().toString());
+                    paneHPPl1.add(imgHPPl1, 0, 0);
+                } else if (percentHp<=33.2 && percentHp>16.5){
+                    imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPRedPl1.png").toURI().toString());
                     paneHPPl1.add(imgHPPl1, 0, 0);
-                    imgHPPl2 = new ImageView(new File("src/main/java/images/HP/imgHPRedPl2.png").toURI().toString());
-                    paneHPPl2.add(imgHPPl2, 0, 0);
-                } else {
-                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPGreenPl1.png").toURI().toString());
+                } else if (percentHp<=16.5 && percentHp>=0.1){
+                    imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
+                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPDeepRedPl1.png").toURI().toString());
                     paneHPPl1.add(imgHPPl1, 0, 0);
-                    imgHPPl2 = new ImageView(new File("src/main/java/images/HP/imgHPGreenPl2.png").toURI().toString());
-                    paneHPPl2.add(imgHPPl2, 0, 0);
-                    check = -1;
+                } else if (percentHp<0.1){
+                    imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
+                    imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPBlackPl1.png").toURI().toString());
+                    paneHPPl1.add(imgHPPl1, 0, 0);
+                    paneAll.add(imgGameOver, 1, 1);  //Добавляем картинку Game Over
                 }
-                check++;
             }
         });
+    }
+
+    public void percent(){
+        hp = (int) (1000 + Math.random() * 500);
+        damage = (int) (40 + Math.random() * 90);
+        System.out.println("Здоровье = "+hp);
+        System.out.println("Дамаг по нам = "+damage);
+        percentDamage = (damage*100)/hp;
+        System.out.println("% дамага = "+percentDamage);
+        percentHp = percentHp-percentDamage;
+        System.out.println("% оставшегося HP = "+percentHp+"\n");
     }
 }
