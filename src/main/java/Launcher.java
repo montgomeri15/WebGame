@@ -35,19 +35,21 @@ public class Launcher extends Application {
     Button buttonRegistration = new Button("Sign Up");
     Label labelErrorMessage = new Label("");
 
+    //Некоторые картинки, которые мы вызываем в дальнейшем
     ImageView imgHPPl1 = new ImageView(new File("src/main/java/images/HP/DuoLonHP.png").toURI().toString());
     ImageView imgHPPl2 = new ImageView(new File("src/main/java/images/HP/SaikiHP.png").toURI().toString());
     ImageView imgPl1 = new ImageView(new File("src/main/java/images/DuoLon.gif").toURI().toString());
     ImageView imgPl2 = new ImageView(new File("src/main/java/images/Saiki.gif").toURI().toString());
     ImageView imgSpace = new ImageView(new File("src/main/java/images/space.png").toURI().toString());
-    ImageView imgGameOver = new ImageView(new File("src/main/java/images/spaceGameOver.png").toURI().toString());
 
+    //Панели, которые нам потребуются в нескольких методах
     GridPane paneHPPl1;
     GridPane paneHPPl2;
     GridPane paneFightPl1;
     GridPane paneFightPl2;
     GridPane paneAll;
 
+    //Для радиобаттонов
     String stringHead = "Голова";
     String stringBody = "Корпус";
     String stringLegs = "Ноги";
@@ -56,6 +58,8 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        /** Блок авторизации */
         GridPane paneFields = new GridPane();
         paneFields.setAlignment(Pos.CENTER);
         primaryStage.setResizable(false);
@@ -119,8 +123,9 @@ public class Launcher extends Application {
             // }
         });
     }
-
     public void fightFrame() {
+
+        /** Блок окна игры */
         Stage primaryStageFight = new Stage();
 
         String stringAttack = "Атака";
@@ -139,6 +144,7 @@ public class Launcher extends Application {
         Label labelSpaceBetweenVert = new Label(stringSpace);
         Label labelSpaceBetweenHoriz = new Label(stringSpaceHoriz);
 
+        //4 группы радибаттонов
         ToggleGroup radioGroupAttackPl1 = new ToggleGroup();
         RadioButton radioHeadAttackPl1 = new RadioButton(stringHead);
         RadioButton radioBodyAttackPl1 = new RadioButton(stringBody);
@@ -171,6 +177,7 @@ public class Launcher extends Application {
         radioBodyShieldPl2.setToggleGroup(radioGroupShieldPl2);
         radioLegsShieldPl2.setToggleGroup(radioGroupShieldPl2);
 
+        //4 панели для радибаттонов
         GridPane paneRadioAttackPl1 = new GridPane();
         paneRadioAttackPl1.setStyle("-fx-border-color: gray;");
         paneRadioAttackPl1.setPrefWidth(150);
@@ -215,6 +222,7 @@ public class Launcher extends Application {
         paneRadioShieldPl2.add(radioBodyShieldPl2, 0, 3);
         paneRadioShieldPl2.add(radioLegsShieldPl2, 0, 4);
 
+        //Общая панель для радибаттонов
         GridPane paneAllRadioPanes = new GridPane();
         paneRadioShieldPl2.setAlignment(Pos.CENTER);
         paneAllRadioPanes.add(paneRadioAttackPl1, 0, 0);
@@ -224,6 +232,7 @@ public class Launcher extends Application {
         paneAllRadioPanes.add(paneRadioShieldPl1, 0, 2);
         paneAllRadioPanes.add(paneRadioShieldPl2, 2, 2);
 
+        //Панели иконок персонажей со здоровьем
         paneHPPl1 = new GridPane();
         paneHPPl1.setAlignment(Pos.CENTER);
         paneHPPl1.add(imgHPPl1, 0, 0);
@@ -231,6 +240,7 @@ public class Launcher extends Application {
         paneHPPl2.setAlignment(Pos.CENTER);
         paneHPPl2.add(imgHPPl2, 0, 0);
 
+        //Основная панель боя (сами персонажи)
         paneFightPl1 = new GridPane();
         paneFightPl1.setAlignment(Pos.CENTER);
         paneFightPl1.add(imgPl1, 0, 0);
@@ -244,6 +254,7 @@ public class Launcher extends Application {
         paneGo.setAlignment(Pos.CENTER);
         paneGo.add(buttonGo, 0, 0);
 
+        //Все панели вместе
         paneAll = new GridPane();
         paneAll.setAlignment(Pos.CENTER);
         paneAll.add(paneHPPl1, 0, 0);
@@ -254,6 +265,7 @@ public class Launcher extends Application {
         paneAll.add(paneFightPl2, 2, 2);
         paneAll.add(paneGo, 1, 3);
 
+        //Устанавливаем фон
         BackgroundImage myBI= new BackgroundImage(new Image(new File("src/main/java/images/background.jpg").toURI().toString()),  //Фон
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         paneAll.setBackground(new Background(myBI));
@@ -264,46 +276,43 @@ public class Launcher extends Application {
         primaryStageFight.setWidth(screenWidth);  //Задаем ширину
         primaryStageFight.setHeight(screenHeight);  //Задаем высоту
 
-        Scene scene = new Scene(paneAll, screenWidth, screenHeight);
+        Scene scene = new Scene(paneAll, screenWidth, screenHeight);  //Помещаем все на сцену и задаем ее размеры
 
         primaryStageFight.setTitle("Game");
         primaryStageFight.setScene(scene);
-        primaryStageFight.show();
+        primaryStageFight.show();  //Видимость
 
+        //Кнопка-тест, которая уменьшает здоровье и меняет картинки шкалы
         buttonGo.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
                 percent();
-
                 if (percentHp<=83.3 && percentHp>66.6) {
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPLimePl1.png").toURI().toString());
-                    paneHPPl1.add(imgHPPl1, 0, 0);
                 } else if (percentHp<=66.6 && percentHp>49.9){
                     imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPYellowPl1.png").toURI().toString());
-                    paneHPPl1.add(imgHPPl1, 0, 0);
                 } else if (percentHp<=49.9 && percentHp>33.2){
                     imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPOrangePl1.png").toURI().toString());
-                    paneHPPl1.add(imgHPPl1, 0, 0);
                 } else if (percentHp<=33.2 && percentHp>16.5){
                     imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPRedPl1.png").toURI().toString());
-                    paneHPPl1.add(imgHPPl1, 0, 0);
                 } else if (percentHp<=16.5 && percentHp>=0.1){
                     imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPDeepRedPl1.png").toURI().toString());
-                    paneHPPl1.add(imgHPPl1, 0, 0);
                 } else if (percentHp<0.1){
                     imgHPPl1.setImage(Image.impl_fromPlatformImage(null));
                     imgHPPl1 = new ImageView(new File("src/main/java/images/HP/imgHPBlackPl1.png").toURI().toString());
-                    paneHPPl1.add(imgHPPl1, 0, 0);
+                    ImageView imgGameOver = new ImageView(new File("src/main/java/images/spaceGameOver.png").toURI().toString());
                     paneAll.add(imgGameOver, 1, 1);  //Добавляем картинку Game Over
                 }
+                paneHPPl1.add(imgHPPl1, 0, 0);  //Добавляем нужный цвет шкалы в соответствии с условием if
             }
         });
     }
-
     public void percent(){
+
+        /** Блок определения процента урона */
         hp = (int) (1000 + Math.random() * 500);
         damage = (int) (40 + Math.random() * 90);
         System.out.println("Здоровье = "+hp);
