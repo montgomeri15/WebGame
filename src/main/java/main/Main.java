@@ -39,6 +39,10 @@ public class Main {
         context.addServlet(new ServletHolder(registrationServlet), "/reg");
 
         server.start();
+
+        Server2 server2 = new Server2();
+        server2.server2();
+
         server.join();
     }
 }
